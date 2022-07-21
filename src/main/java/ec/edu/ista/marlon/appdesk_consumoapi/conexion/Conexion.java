@@ -1,10 +1,18 @@
 package ec.edu.ista.marlon.appdesk_consumoapi.conexion;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Iterator;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import org.json.JSONObject;
 
 public class Conexion {
     private String endPoint;
@@ -65,17 +73,20 @@ public class Conexion {
         this.url = url;
     }
 
-    public void conexcion(){
+    public HttpURLConnection conexcion(){
         try {
             System.out.println("MODULO "+getModulo());
             System.out.println("ENDPOINT "+getEndPoint());
 
-            setUrl(new URL("http://localhost:9090/"+getModulo()+"/"+getEndPoint()));
+            //setUrl(new URL("http://localhost:9090/"+getModulo()+"/"+getEndPoint()));
+            setUrl(new URL("https://pokeapi.co/api/v2/pokemon/ditto"));
             HttpURLConnection connection= (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(getMetodo());
             connection.connect();
 
             setResponseCode(connection.getResponseCode());
+
+            return connection;
 
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
@@ -84,5 +95,25 @@ public class Conexion {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
+
+    public void listarJson(){
+        String urlstr="https://pokeapi.co/api/v2/pokemon/ditto";
+        try{
+            URL url = new  URL(urlstr);
+            InputStream is = url.openStream();
+            JsonReader rdr=Json.createReader(new InputStreamReader(is, "UTF-8"));
+            JsonArray results= rdr.readArray();
+            Iterator<?> iterator = results.iterator();
+            while(iterator.hasNext()){
+                JsonObject jsonObject = (JsonObject) iterator.next();
+                System.out.println("JSON-> El id es: "+jsonObject.get("id").toString().toUpperCase()+", el nombre es: "+jsonObject.get("nombre").toString().toUpperCase()+", el puesto es: "+jsonObject.get("puesto").toString().toUpperCase());
+            }
+        }catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -10,6 +10,8 @@ module ec.edu.ista.marlon.appdesk_consumoapi {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires org.json;
+    requires java.json;
 
     opens ec.edu.ista.marlon.appdesk_consumoapi to javafx.fxml;
     exports ec.edu.ista.marlon.appdesk_consumoapi;
